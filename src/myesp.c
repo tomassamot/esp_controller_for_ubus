@@ -2,7 +2,6 @@
 #include <libubus.h>
 #include <stdlib.h>
 #include <syslog.h>
-#include <unistd.h>
 
 #include <libserialport.h>
 
@@ -132,9 +131,6 @@ static int myesp_on(struct ubus_context *ctx, struct ubus_object *obj,
 	
 	blobmsg_parse(myesp_onoff_policy, _ONOFF_MAX, tb, blob_data(msg), blob_len(msg));
 	
-
-	//if (!tb[PORT_ONOFF] || !tb[PIN])
-	//	return UBUS_STATUS_INVALID_ARGUMENT;
 	if(!tb[PORT_ONOFF]){
 		sprintf(return_text, "Incorrect port given");
 		set_return_values(ctx, req, &b, return_text);
@@ -145,7 +141,6 @@ static int myesp_on(struct ubus_context *ctx, struct ubus_object *obj,
 		set_return_values(ctx, req, &b, return_text);
 		return;
 	}
-
 	
 	char command[80];
 	sprintf(command, "echo '{\"action\": \"on\", \"pin\": %d}' > %s", blobmsg_get_u32(tb[PIN]), blobmsg_get_string(tb[PORT_ONOFF]));
@@ -169,9 +164,6 @@ static int myesp_off(struct ubus_context *ctx, struct ubus_object *obj,
 	
 	blobmsg_parse(myesp_onoff_policy, _ONOFF_MAX, tb, blob_data(msg), blob_len(msg));
 	
-
-	//if (!tb[PORT_ONOFF] || !tb[PIN])
-	//	return UBUS_STATUS_INVALID_ARGUMENT;
 	if(!tb[PORT_ONOFF]){
 		sprintf(return_text, "Incorrect port given");
 		set_return_values(ctx, req, &b, return_text);
@@ -189,15 +181,10 @@ static int myesp_off(struct ubus_context *ctx, struct ubus_object *obj,
 
 	system(command);
 		
-	sprintf(return_text, "Successfully sent 'off' command");
+	sprintf(return_text, "Successfully sent 'off' command to port ''");
 	
 	set_return_values(ctx, req, &b, return_text);
 	return;
-
-	// blob_buf_init(&b, 0);
-	// blobmsg_add_string(&b, "response", return_text);
-	// ubus_send_reply(ctx, req, b.head);
-	// blob_buf_free(&b);
 }
 
 static void set_return_values(struct ubus_context *ctx, struct ubus_request_data *req,struct blob_buf *b, char return_text[])
