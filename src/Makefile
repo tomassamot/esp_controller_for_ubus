@@ -1,12 +1,13 @@
+BIN:=ubus_esp
 SRCS:=$(wildcard *.c)
-
+CPPFLAGS:= 
+LDFLAGS:= -lblobmsg_json -lubox -lubus -lserialport
 .PHONY:all clean
 
-all:ubus_esp
+all:$(BIN)
 
-ubus_esp: $(SRCS)
-# ubus_esp: counter.c
-	$(CC) -o $@ $^ -lblobmsg_json -lubox -lubus
+$(BIN): $(SRCS)
+	$(CC) $(CPPFLAGS) -o $@ $^ $(LDFLAGS) 
 
 clean:
 	rm -rf ubus_esp
